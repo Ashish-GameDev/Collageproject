@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Press Start Again - Games you buy should not disappear</title>
+<meta name="description" content="A student project about video game preservation and the Stop Killing Games movement.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,800&display=swap" rel="stylesheet">
+<style>
+/* Ashish Sonawane - Press Start Again - my college project website */
+
+/* colours and fonts live here so I can change the whole look in one place */
+:root{
+  --paper:#E8EBF4;
+  --panel:#F7F8FC;
+  --ink:#1A1E3C;
+  --mute:#555B82;
+  --line:#C3C9DF;
+  --blue:#2F4BDB;
+  --rose:#C2255C;
+  --head:"Bricolage Grotesque", "Trebuchet MS", system-ui, sans-serif;
+  --body:system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--body);font-size:1.0625rem;line-height:1.6}
+a{color:var(--blue)}
+:focus-visible{outline:3px solid var(--blue);outline-offset:3px}
+.wrap{max-width:62rem;margin:0 auto;padding:0 1.25rem}
+
+/* top bar */
+.bar{display:flex;justify-content:space-between;align-items:center;gap:1rem;padding:1.1rem 0;flex-wrap:wrap}
+.brand{font-family:var(--head);font-weight:800;font-size:1.15rem;text-decoration:none;color:var(--ink)}
+.bar nav a{margin-left:1.25rem;color:var(--ink);text-decoration:none;font-weight:500}
+.bar nav a:hover{text-decoration:underline}
+
+/* hero */
+.hero{padding:2.5rem 0 3.5rem}
+h1{font-family:var(--head);font-weight:800;font-size:clamp(2.6rem,8vw,5.4rem);line-height:1;letter-spacing:-.02em;margin:0 0 1.25rem;max-width:12ch}
+.lead{max-width:38rem;color:var(--mute);margin:0 0 2rem}
+
+/* the five game tiles (cartridge shape) */
+.shelf{display:grid;grid-template-columns:repeat(5,1fr);gap:.75rem;margin:0 0 1.25rem;padding:0;list-style:none}
+.tile{width:100%;height:100%;min-height:8.5rem;text-align:left;font:inherit;color:var(--ink);cursor:pointer;
+  background:var(--panel);border:2px solid var(--ink);padding:.9rem .8rem;display:flex;flex-direction:column;justify-content:space-between;
+  clip-path:polygon(0 0,82% 0,100% 14%,100% 100%,0 100%);transition:background .4s,color .4s,border-color .4s,filter .4s}
+.tile .yr{font-size:.85rem;color:var(--mute)}
+.tile .nm{font-family:var(--head);font-weight:800;font-size:1.15rem;line-height:1.15}
+.tile .st{font-size:.85rem;font-weight:600;color:var(--blue)}
+.tile[aria-pressed="true"]{background:var(--blue);color:#fff;border-color:var(--blue)}
+.tile[aria-pressed="true"] .yr,.tile[aria-pressed="true"] .st{color:#fff}
+.tile.off{filter:grayscale(1);background:#D3D6E3;border-color:#8A8FAE}
+.tile.off .st{color:var(--rose);font-weight:800}
+.tile.off[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);filter:none}
+.tile.off[aria-pressed="true"] .st{color:#FF9BBD}
+
+.controls{display:flex;align-items:center;gap:1rem;flex-wrap:wrap;margin-bottom:1.5rem}
+.power{font:inherit;font-weight:600;background:var(--ink);color:#fff;border:0;padding:.75rem 1.25rem;cursor:pointer}
+.power:hover{background:var(--blue)}
+.count{margin:0;font-weight:600}
+.note{margin:0 0 1.25rem;font-size:.9rem;color:var(--mute)}
+
+.detail{background:var(--panel);border-left:6px solid var(--blue);padding:1.25rem 1.5rem;min-height:7.5rem}
+.detail h3{font-family:var(--head);margin:0 0 .4rem;font-size:1.4rem}
+.detail p{margin:0;max-width:40rem}
+.detail .empty{color:var(--mute)}
+
+/* normal sections */
+section.block{padding:3.5rem 0;border-top:1px solid var(--line)}
+h2{font-family:var(--head);font-weight:800;font-size:clamp(1.8rem,4vw,2.6rem);line-height:1.1;margin:0 0 1.5rem;letter-spacing:-.01em}
+.facts{margin:0;padding:0;list-style:none;display:grid;gap:1.5rem}
+.facts li{padding-left:1.25rem;border-left:3px solid var(--ink);max-width:42rem}
+.facts strong{display:block;font-family:var(--head);font-size:1.25rem;margin-bottom:.2rem}
+.facts span{color:var(--mute)}
+.ask{max-width:42rem}
+.ask ol{padding-left:1.25rem}
+.ask li{margin-bottom:.6rem}
+.big{font-family:var(--head);font-weight:800;font-size:1.35rem;line-height:1.3;max-width:34rem}
+
+/* the two-sides tabs */
+.tabs{display:flex;gap:.5rem;margin-bottom:1rem}
+.tab{font:inherit;font-weight:600;padding:.6rem 1.1rem;border:2px solid var(--ink);background:transparent;color:var(--ink);cursor:pointer}
+.tab[aria-selected="true"]{background:var(--ink);color:#fff}
+.pane{max-width:42rem}
+.pane ul{padding-left:1.25rem;margin:0}
+.pane li{margin-bottom:.6rem}
+
+footer{border-top:2px solid var(--ink);padding:2rem 0 3rem;font-size:.95rem}
+footer p{margin:.2rem 0}
+
+@media (max-width:760px){
+  .shelf{grid-template-columns:repeat(2,1fr)}
+  .bar nav a{margin:0 1rem 0 0}
+}
+@media (prefers-reduced-motion:reduce){
+  *{transition:none !important;scroll-behavior:auto !important}
+}
+</style>
+</head>
+<body>
+
+<header class="wrap bar">
+  <a class="brand" href="#top">Press Start Again</a>
+  <nav aria-label="Main">
+    <a href="#problem">The problem</a>
+    <a href="#ask">The fix</a>
+    <a href="#sides">Both sides</a>
+    <a href="#act">Learn more</a>
+  </nav>
+</header>
+
+<main id="top">
+  <section class="wrap hero">
+    <h1>You bought it. They switched it off.</h1>
+    <p class="lead">Online games can stop working the day a publisher shuts down the servers, even if you paid full price. Here are five cases of games and stores that vanished. Pick one to read what happened.</p>
+
+    <ul class="shelf" aria-label="Five lost games and stores">
+      <li><button class="tile" data-id="pt" aria-pressed="false"><span class="yr">2015</span><span class="nm">P.T.</span><span class="st">Playable</span></button></li>
+      <li><button class="tile" data-id="wii" aria-pressed="false"><span class="yr">2019</span><span class="nm">Wii Shop Channel</span><span class="st">Playable</span></button></li>
+      <li><button class="tile" data-id="eshop" aria-pressed="false"><span class="yr">2023</span><span class="nm">3DS and Wii U eShop</span><span class="st">Playable</span></button></li>
+      <li><button class="tile" data-id="crew" aria-pressed="false"><span class="yr">2024</span><span class="nm">The Crew</span><span class="st">Playable</span></button></li>
+      <li><button class="tile" data-id="anthem" aria-pressed="false"><span class="yr">2026</span><span class="nm">Anthem</span><span class="st">Playable</span></button></li>
+    </ul>
+
+    <div class="controls">
+      <button class="power" id="power" aria-pressed="false">Switch off the servers</button>
+      <p class="count" id="count" aria-live="polite">5 of 5 games playable</p>
+    </div>
+    <p class="note">An illustration: each tile shows the game as it was before it was lost.</p>
+
+    <div class="detail" id="detail" aria-live="polite">
+      <p class="empty">Pick a tile above to see what happened.</p>
+    </div>
+  </section>
+
+  <section class="block" id="problem">
+    <div class="wrap">
+      <h2>Why games disappear</h2>
+      <ul class="facts">
+        <li><strong>You buy a license, not a game.</strong><span>The store button says Buy, but most digital purchases are a license that the seller can limit or end.</span></li>
+        <li><strong>Many games need the publisher's servers.</strong><span>Sometimes even for single-player modes. When the servers close, the game can stop launching.</span></li>
+        <li><strong>The law has not caught up.</strong><span>Consumer law covers faulty goods and copyright law protects publishers. Very little covers a working game that is switched off on purpose.</span></li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="block" id="ask">
+    <div class="wrap">
+      <h2>What a fair rule looks like</h2>
+      <div class="ask">
+        <p class="big">The Stop Killing Games campaign asks for games to be left in a working state when support ends. It does not ask for support forever.</p>
+        <p>In my report I suggest a balanced model:</p>
+        <ol>
+          <li>Show the support period and server needs on the store page before purchase.</li>
+          <li>Give long notice before shutdown, and a refund if a game ends earlier than promised.</li>
+          <li>Prepare an end-of-life plan: an offline mode, a patch, or a release of the server software.</li>
+          <li>Give small studios and true live-service games lighter duties.</li>
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <section class="block" id="sides">
+    <div class="wrap">
+      <h2>Both sides have a point</h2>
+      <div class="tabs" role="tablist" aria-label="Choose a side">
+        <button class="tab" role="tab" id="tab-sup" aria-controls="pane-sup" aria-selected="true">Supporters say</button>
+        <button class="tab" role="tab" id="tab-pub" aria-controls="pane-pub" aria-selected="false">Publishers say</button>
+      </div>
+      <div class="pane" role="tabpanel" id="pane-sup" aria-labelledby="tab-sup">
+        <ul>
+          <li>Customers pay full price and expect a working product.</li>
+          <li>Games are cultural works, and losing them harms everyone.</li>
+          <li>Some publishers already release offline patches or server tools, so it can be done.</li>
+          <li>A clear label before purchase would help buyers choose.</li>
+        </ul>
+      </div>
+      <div class="pane" role="tabpanel" id="pane-pub" aria-labelledby="tab-pub" hidden>
+        <ul>
+          <li>Old servers cost money and engineering time.</li>
+          <li>Some games were built around live services and cannot easily work without them.</li>
+          <li>Releasing server code can expose security problems or tools for cheating.</li>
+          <li>Strict rules could push small studios out of the market.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="block" id="act">
+    <div class="wrap">
+      <h2>Learn more</h2>
+      <p class="big">My view: honest labels and a clear end-of-life plan protect players and still let publishers close services that no longer make money.</p>
+      <p>Read the campaign in its own words, and check the official page for the latest status:</p>
+      <ul>
+        <li><a href="https://www.stopkillinggames.com" target="_blank" rel="noopener">Stop Killing Games campaign</a></li>
+        <li><a href="https://citizens-initiative.europa.eu" target="_blank" rel="noopener">European Citizens' Initiative portal</a></li>
+      </ul>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <p><strong>Built by Ashish Sonawane</strong>, SY BBA-CA, Vishwakarma College of Arts, Commerce &amp; Science.</p>
+    <p>Based on my college project report on video game preservation. Facts come from public sources and may change, so check them before quoting.</p>
+  </div>
+</footer>
+
+<script>
+// Ashish Sonawane - all the JavaScript is below, in three small parts.
+
+// Part 1: the text for each game tile
+const games = {
+  pt: { title: "P.T. (2015)", text: "A playable teaser for the cancelled Silent Hills. After the project ended it was removed from the PlayStation Store in 2015. If you deleted it, you could never download it again." },
+  wii: { title: "Wii Shop Channel (2019)", text: "Nintendo closed the Wii Shop Channel in 2019. Digital-only games sold there were no longer available to new buyers." },
+  eshop: { title: "3DS and Wii U eShop (2023)", text: "Nintendo ended purchases on both eShops in 2023. Games sold only there now survive on the consoles of people who bought them early." },
+  crew: { title: "The Crew (2024)", text: "Ubisoft delisted this online racing game at the end of 2023 and shut its servers in early 2024. After that, even people who owned it could not launch it. This is what started the Stop Killing Games campaign." },
+  anthem: { title: "Anthem (2026)", text: "EA announced that the servers of Anthem would close in January 2026. The shutdown was announced early, but the game still became unplayable." }
+};
+
+const tiles = document.querySelectorAll(".tile");
+const detail = document.getElementById("detail");
+
+// when a tile is clicked, mark it as selected and show its text
+tiles.forEach(function (tile) {
+  tile.addEventListener("click", function () {
+    tiles.forEach(function (t) { t.setAttribute("aria-pressed", "false"); });
+    tile.setAttribute("aria-pressed", "true");
+    const g = games[tile.dataset.id];
+    detail.innerHTML = "";
+    const h = document.createElement("h3");
+    h.textContent = g.title;
+    const p = document.createElement("p");
+    p.textContent = g.text;
+    detail.appendChild(h);
+    detail.appendChild(p);
+  });
+});
+
+// Part 2: the "switch off the servers" button
+const power = document.getElementById("power");
+const count = document.getElementById("count");
+const calm = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+let serversOff = false;
+
+function updateCount() {
+  const playable = document.querySelectorAll(".tile:not(.off)").length;
+  count.textContent = playable + " of 5 games playable";
+}
+
+power.addEventListener("click", function () {
+  serversOff = !serversOff;
+  power.setAttribute("aria-pressed", serversOff);
+  power.textContent = serversOff ? "Switch the servers back on" : "Switch off the servers";
+  // tiles change one after another, unless the visitor asked for less motion
+  tiles.forEach(function (tile, i) {
+    setTimeout(function () {
+      tile.classList.toggle("off", serversOff);
+      tile.querySelector(".st").textContent = serversOff ? "Gone" : "Playable";
+      updateCount();
+    }, calm ? 0 : i * 350);
+  });
+});
+
+// Part 3: the two tabs (supporters / publishers)
+const tabs = document.querySelectorAll(".tab");
+tabs.forEach(function (tab) {
+  tab.addEventListener("click", function () {
+    tabs.forEach(function (t) {
+      const on = (t === tab);
+      t.setAttribute("aria-selected", on);
+      document.getElementById(t.getAttribute("aria-controls")).hidden = !on;
+    });
+  });
+});
+</script>
+</body>
+</html>
